@@ -4,6 +4,8 @@ const TodoSchema = new mongoose.Schema({
     username: {
         required: true,
         type: String,
+        unique: true,
+        dropDups: true,
     },
     todos: {
         type: [Object],
@@ -11,4 +13,4 @@ const TodoSchema = new mongoose.Schema({
     },
 })
 
-module.exports = mongoose.model('UserTodos', TodoSchema)
+module.exports = mongoose.model('UserTodos', TodoSchema, 'usertodos')

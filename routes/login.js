@@ -10,7 +10,7 @@ router.post('/', (req, res) => {
     User.findOne({ username }, (err, user) => {
         if (err) return res.status(400).send('user not found!')
         if (user.password === password) {
-            const token = JWT.sign({ id: user._id }, process.env.TOKEN_SECRET)
+            const token = JWT.sign({ id: user._id }, process.env.TOKEN_SECRET, { expiresIn: '1h' })
             return res
                 .status(200)
                 .cookie('auth-token', token)

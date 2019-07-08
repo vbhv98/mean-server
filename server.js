@@ -12,7 +12,7 @@ const todoRouter = require('./routes/fetchTodos')
 
 const app = express()
 
-mongoose.connect(process.env.DB_URI, { useNewUrlParser: true })
+mongoose.connect(process.env.DB_URI, { useNewUrlParser: true, useCreateIndex: true })
 
 app.use(cookieParser())
 app.use(bodyParser.urlencoded({ extended: true }))

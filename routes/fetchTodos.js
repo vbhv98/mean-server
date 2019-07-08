@@ -4,15 +4,15 @@ const TodoModel = require('../models/todos')
 const verifyToken = require('../middlewares/verifyUser')
 const router = express.Router()
 
-router.get('/', verifyToken, (req, res) => {
+router.get('/', verifyToken, async (req, res) => {
     todos = []
     let username
-    UserModel.findById(req.id, (err, user) => {
+    await UserModel.findById(req.id, (err, user) => {
         if (err) res.status(400).send('No user with this token!')
         username = user.username
     })
 
-    TodoModel.findOne({ username }, (err, entry) => {
+    await TodoModel.findOne({ username }, async (err, entry) => {
         if (err) return res.status(400).send('error occured!')
         todos = (entry && entry.todos) || []
     })
@@ -27,7 +27,6 @@ router.post('/', verifyToken, async (req, res) => {
     await UserModel.findById(req.id, (err, user) => {
         if (err) res.status(400).send('No user with this token!')
         username = user.username
-        console.log(username)
     })
 
     const userTodo = new TodoModel({
@@ -40,6 +39,24 @@ router.post('/', verifyToken, async (req, res) => {
         res.status(200).send('user todo created')
     } catch (err) {
         if (err) res.status(400).send('Cannot enter todos!')
+    }
+})
+
+router.post('/update', verifyToken, async (req, res) => {
+    const { newTodo } = req.body
+    let username
+
+    await UserModel.findById(req.id, (err, user) => {
+        if (err) return res.status(400).send('No user with this token!')
+        username = (user && user.username) || ''
+    })
+
+    try {
+        const updatedTodo = await TodoModel.updateOne({ username }, { $push: { todos: newTodo } })
+        return res.json(updatedTodo)
+    } catch (err) {
+        console.log(err)
+        return res.status(400).send('Cannot update todos!')
     }
 })
 
