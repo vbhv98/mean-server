@@ -5,6 +5,6 @@
 - Login via `/api/login` route.
 
 **Additional fetures checklist**
-- [x] Protected route.
+- [x] Protected route for todo `add` and `update`.
 - [x] JWT support.
 - [ ] Update User details.
